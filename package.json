@@ -1,8 +1,8 @@
 {
   "name": "url-shortener",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "URL Shortener API with NestJS and TypeORM with PostgreSQL database and Redis cache manager for caching and cron job for deleting expired URLs",
+  "author": "pouth.nadin",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
