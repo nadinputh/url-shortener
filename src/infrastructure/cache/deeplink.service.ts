@@ -15,7 +15,18 @@ export class DeeplinkService implements IDeeplinkService {
     });
   }
 
-  async add(slug: string, deeplink: string): Promise<void> {
-    await this.cache.set(slug, deeplink);
+  async add(payload: {
+    slug: string;
+    url: string;
+    expiresAt?: Date;
+  }): Promise<void> {
+    if (payload.expiresAt) {
+      const ttl = payload.expiresAt.getTime() - new Date().getTime();
+      if (ttl > 0) {
+        await this.cache.set(payload.slug, payload.url, ttl);
+        return;
+      }
+    }
+    await this.cache.set(payload.slug, payload.url);
   }
 }

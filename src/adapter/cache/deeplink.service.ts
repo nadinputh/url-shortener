@@ -17,5 +17,5 @@ export interface IDeeplinkService {
    * @param slug ID of the deeplink
    * @param deeplink Deeplink URL
    */
-  add(slug: string, deeplink: string): Promise<void>;
+  add(payload: { slug: string; url: string; expiresAt?: Date }): Promise<void>;
 }

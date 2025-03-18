@@ -23,23 +23,29 @@ export class AppService {
   read(slug: string): Promise<string> {
     return this.deeplink.get(slug).then(async (url) => {
       if (!url) {
-        url = await this.repository
-          .getBySlug(slug)
-          .then((deeplink) => deeplink?.url);
+        const deeplink = await this.repository.getBySlug(slug);
+        await Promise.all([
+          this.repository.incrementClicksBySlug(slug),
+          this.deeplink.add({ slug, url, expiresAt: deeplink.expiresAt }),
+        ]);
+        return deeplink.url;
       }
       await Promise.all([
         this.repository.incrementClicksBySlug(slug),
-        this.deeplink.add(slug, url),
+        this.deeplink.add({ slug, url }),
       ]);
       return url;
     });
   }
 
-  async write(url: string): Promise<string> {
+  async write(url: string, options?: { expiresAt?: Date }): Promise<string> {
     const slug: string = unique();
+    if (options.expiresAt < new Date()) {
+      delete options.expiresAt;
+    }
     await Promise.all([
-      this.deeplink.add(slug, url),
-      this.repository.add(slug, url),
+      this.deeplink.add({ slug, url, expiresAt: options?.expiresAt }),
+      this.repository.add({ slug, url, expiresAt: options?.expiresAt }),
     ]);
     const baseUrl = this.config.get<string>('BASE_URL');
     return new URL(`/deeplink/${slug}`, baseUrl).href;

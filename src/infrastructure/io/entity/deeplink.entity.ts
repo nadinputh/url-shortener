@@ -20,9 +20,15 @@ export class Deeplink {
   @Column({ default: 0 })
   clicks: number;
 
-  @CreateDateColumn({ update: false })
+  @Column('timestamp', {
+    name: 'expires_at',
+    nullable: true,
+  })
+  expiresAt?: Date;
+
+  @CreateDateColumn({ name: 'created_at', update: false })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 }

@@ -1,3 +1,4 @@
+import { CreateDeeplinkQuery } from '@/dto/query/create-deeplink.query';
 import { Deeplink } from '@infrastructure/io/entity/deeplink.entity';
 
 export const DEEPLINK_REPOSITORY = 'DEEPLINK_REPOSITORY';
@@ -21,7 +22,7 @@ export interface IDeeplinkRepository {
    * @param url The URL of the deeplink
    * @returns The added deeplink
    */
-  add(slug: string, url: string): Promise<Deeplink>;
+  add(dto: CreateDeeplinkQuery): Promise<Deeplink>;
   /**
    * Increment the clicks of the deeplink
    * @param id The ID of the deeplink

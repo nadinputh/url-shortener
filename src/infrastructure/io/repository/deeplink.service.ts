@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Deeplink } from '../entity/deeplink.entity';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { EntityManager } from 'typeorm';
+import { CreateDeeplinkQuery } from '@/dto/query/create-deeplink.query';
 
 @Injectable()
 export class DeeplinkService implements IDeeplinkRepository {
@@ -25,8 +26,8 @@ export class DeeplinkService implements IDeeplinkRepository {
     return this.manager.findOne(Deeplink, { where: { slug } });
   }
 
-  add(slug: string, url: string): Promise<Deeplink> {
-    return this.manager.save(Deeplink, { slug, url });
+  add({ slug, url, expiresAt }: CreateDeeplinkQuery): Promise<Deeplink> {
+    return this.manager.save(Deeplink, { slug, url, expiresAt });
   }
 
   async incrementClicks(id: number): Promise<number> {

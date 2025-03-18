@@ -21,7 +21,9 @@ export class AppController {
   }
 
   @Post()
-  async write(@Body() body: { url: string }): Promise<{ deeplink: string }> {
+  async write(
+    @Body() body: { url: string; expiresAt?: Date },
+  ): Promise<{ deeplink: string }> {
     /**
      * If you want to validate the URL before writing it to the cache, you can use the following code:
      * const validated = isExist(body.url);
@@ -29,7 +31,9 @@ export class AppController {
      *  throw new Error('URL does not exist');
      * }
      **/
-    const url = await this.appService.write(body.url);
+    const url = await this.appService.write(body.url, {
+      expiresAt: new Date(body.expiresAt),
+    });
     return {
       deeplink: url,
     };
