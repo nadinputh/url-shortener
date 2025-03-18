@@ -5,9 +5,26 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CacheInterceptor } from '@nestjs/cache-manager';
 import { LoggingInterceptor } from './interceptor/logging.interceptor';
 import { RequestIdInterceptor } from './interceptor/request-id.interceptor';
+import { ClientsModule } from '@nestjs/microservices';
+import { ConfigService } from '@nestjs/config';
+import { AuthModule } from '@ababank/auth';
 
 @Module({
-  imports: [DomainModule],
+  imports: [
+    AuthModule.configAsync({
+      imports: [],
+      useFactory: (config) => config.get('auth'),
+      inject: [ConfigService],
+    }),
+    DomainModule,
+    ClientsModule.registerAsync([
+      {
+        name: 'DEEPLINK_SERVICE',
+        useFactory: async (config: ConfigService) => config.get('transport'),
+        inject: [ConfigService],
+      },
+    ]),
+  ],
   providers: [
     {
       provide: APP_INTERCEPTOR,

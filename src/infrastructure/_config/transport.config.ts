@@ -15,7 +15,7 @@ export default (config: string) =>
             password: process.env.RABBIT_PASSWORD,
           },
         ],
-        consumerTag: 'runner-service',
+        consumerTag: 'deeplink-service',
       },
     }),
   );
