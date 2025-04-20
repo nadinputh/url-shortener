@@ -7,15 +7,10 @@ import { LoggingInterceptor } from './interceptor/logging.interceptor';
 import { RequestIdInterceptor } from './interceptor/request-id.interceptor';
 import { ClientsModule } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
-import { AuthModule } from '@ababank/auth';
+import { DeeplinkController } from './controller/deeplink.controller';
 
 @Module({
   imports: [
-    AuthModule.configAsync({
-      imports: [],
-      useFactory: (config) => config.get('auth'),
-      inject: [ConfigService],
-    }),
     DomainModule,
     ClientsModule.registerAsync([
       {
@@ -39,6 +34,6 @@ import { AuthModule } from '@ababank/auth';
       useClass: LoggingInterceptor,
     },
   ],
-  controllers: [AppController],
+  controllers: [DeeplinkController, AppController],
 })
 export class ApplicationModule {}

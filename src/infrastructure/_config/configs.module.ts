@@ -4,6 +4,7 @@ import databaseConfig from './database.config';
 import transportConfig from './transport.config';
 import redisConfig from './redis.config';
 import authConfig from './auth.config';
+import grpcConfig from './grpc.config';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import authConfig from './auth.config';
         transportConfig('transport'),
         redisConfig('redis'),
         authConfig('auth'),
+        grpcConfig('grpc'),
       ],
     }),
   ],

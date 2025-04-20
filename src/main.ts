@@ -7,12 +7,21 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  // Enabled Helmet
-  app.use(helmet());
-
   const config = app.get(ConfigService);
-  app.connectMicroservice(config.get('transport'));
+
+  /**
+   * Connect to Pub/Sub Microservice
+   */
+  if (config.get<boolean>('transport.enabled')) {
+    app.connectMicroservice(config.get('transport'));
+  }
+
+  /**
+   * Connect to GRPC Microservice
+   */
+  if (config.get<boolean>('grpc.enabled')) {
+    app.connectMicroservice(config.get('grpc'));
+  }
 
   // Enabled and Config CORS
   app.enableCors({
@@ -21,6 +30,9 @@ async function bootstrap() {
     methods: ['GET', 'POST', 'HEAD'],
     preflightContinue: false,
   });
+
+  // Enabled Helmet
+  app.use(helmet());
 
   // Enabled Response Compression
   app.use(compression());

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package deeplink;
+
+service DeeplinkService {
+  rpc Write (DeeplinkRequest) returns (DeeplinkResponse) {}
+}
+
+message DeeplinkRequest {
+  string url = 1;
+  string expiresAt = 2;
+}
+
+message DeeplinkResponse {
+  string deeplink = 1;
+}

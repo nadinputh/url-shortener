@@ -24,11 +24,14 @@ export class AppService {
     return this.deeplink.get(slug).then(async (url) => {
       if (!url) {
         const deeplink = await this.repository.getBySlug(slug);
-        await Promise.all([
-          this.repository.incrementClicksBySlug(slug),
-          this.deeplink.add({ slug, url, expiresAt: deeplink.expiresAt }),
-        ]);
-        return deeplink.url;
+        if (deeplink) {
+          await Promise.all([
+            this.repository.incrementClicksBySlug(slug),
+            this.deeplink.add({ slug, url, expiresAt: deeplink?.expiresAt }),
+          ]);
+          return deeplink?.url;
+        }
+        return null;
       }
       await Promise.all([
         this.repository.incrementClicksBySlug(slug),
@@ -40,14 +43,14 @@ export class AppService {
 
   async write(url: string, options?: { expiresAt?: Date }): Promise<string> {
     const slug: string = unique();
-    if (options.expiresAt < new Date()) {
-      delete options.expiresAt;
+    if (options?.expiresAt < new Date()) {
+      delete options?.expiresAt;
     }
     await Promise.all([
       this.deeplink.add({ slug, url, expiresAt: options?.expiresAt }),
       this.repository.add({ slug, url, expiresAt: options?.expiresAt }),
     ]);
     const baseUrl = this.config.get<string>('BASE_URL');
-    return new URL(`/deeplink/${slug}`, baseUrl).href;
+    return new URL(`/${slug}`, baseUrl).href;
   }
 }
