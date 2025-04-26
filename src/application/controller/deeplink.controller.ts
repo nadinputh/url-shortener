@@ -20,7 +20,13 @@ export class DeeplinkController {
    */
   @GrpcMethod('DeeplinkService', 'Write')
   async write(data: DeeplinkRequest): Promise<DeeplinkResponse> {
-    const deeplink = await this.appService.write(data.url);
+    let expiresAt: Date | undefined;
+    if (data.expiresAt && typeof data.expiresAt === 'string') {
+      expiresAt = new Date(data.expiresAt);
+    }
+    const deeplink = await this.appService.write(data.url, {
+      expiresAt,
+    });
     return { deeplink };
   }
 

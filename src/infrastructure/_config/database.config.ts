@@ -13,6 +13,7 @@ export default (name: string) =>
       username: process.env.DB_USERNAME || 'root',
       password: process.env.DB_PASSWORD || '',
       logging: process.env.DB_LOGGING === 'true' ? true : false,
+      cache: process.env.DB_CACHE === 'true',
       useUTC: true,
       entities: [Deeplink],
       synchronize: process.env.DB_SYNCHRONIZE === 'true' ? true : false,

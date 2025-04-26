@@ -24,6 +24,8 @@ export class AppService {
     return this.deeplink.get(slug).then(async (url) => {
       if (!url) {
         const deeplink = await this.repository.getBySlug(slug);
+        console.log(deeplink);
+
         if (deeplink) {
           await Promise.all([
             this.repository.incrementClicksBySlug(slug),
@@ -43,7 +45,7 @@ export class AppService {
 
   async write(url: string, options?: { expiresAt?: Date }): Promise<string> {
     const slug: string = unique();
-    if (options?.expiresAt < new Date()) {
+    if (options?.expiresAt <= new Date()) {
       delete options?.expiresAt;
     }
     await Promise.all([
