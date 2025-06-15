@@ -24,8 +24,6 @@ export class AppService {
     return this.deeplink.get(slug).then(async (url) => {
       if (!url) {
         const deeplink = await this.repository.getBySlug(slug);
-        console.log(deeplink);
-
         if (deeplink) {
           await Promise.all([
             this.repository.incrementClicksBySlug(slug),
