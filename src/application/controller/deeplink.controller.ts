@@ -1,11 +1,13 @@
 import { AppService } from '@/domain/service/app.service';
-import { Body, Controller, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Inject, Post, UseGuards } from '@nestjs/common';
 import { ClientProxy, GrpcMethod } from '@nestjs/microservices';
 import { DeeplinkRequest } from '../proto/deeplink/DeeplinkRequest';
 import { DeeplinkResponse } from '../proto/deeplink/DeeplinkResponse';
 import { firstValueFrom } from 'rxjs';
+import { SignatureGuard } from '../guard/signature.guard';
 
 @Controller('deeplinks')
+@UseGuards(SignatureGuard)
 export class DeeplinkController {
   constructor(
     @Inject('DEEPLINK_SERVICE') private client: ClientProxy,

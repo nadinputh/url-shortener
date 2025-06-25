@@ -99,7 +99,7 @@ export abstract class ConfigAdapter implements OnModuleInit, OnModuleDestroy {
         this.config.set(this.name, this.load());
       });
 
-      this.scheduler.addCronJob(this.options.name, job);
+      this.scheduler.addCronJob(this.options.name, job as any);
       job.start();
 
       this.logger.log(
